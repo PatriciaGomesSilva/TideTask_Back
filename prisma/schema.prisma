@@ -1,0 +1,60 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Category {
+  id          Int       @id @default(autoincrement())
+  description String
+  created_at  DateTime? @default(now())
+  updated_at  DateTime? @default(now())
+
+  activities  Activity[]
+}
+
+model Activity {
+  id          Int       @id @default(autoincrement())
+  description String
+  dt_inicial  DateTime
+  dt_final    DateTime
+
+  category    Category  @relation(fields: [categoryId], references: [id])
+  categoryId  Int
+  user        User      @relation(fields: [userId], references: [id])
+  userId      Int
+}
+
+model User {
+  id          Int       @id @default(autoincrement())
+  firstName   String
+  lastName    String
+  email       String    @unique
+  password    String
+
+  profiles    UserProfile[]
+  activities  Activity[]
+}
+
+model Profile {
+  id          Int       @id @default(autoincrement())
+  description String
+  created_at DateTime? @default(now())
+  updated_at DateTime? @default(now())
+
+  userProfiles UserProfile[]
+}
+
+model UserProfile {
+  userId     Int
+  profileId  Int
+  created_at  DateTime? @default(now())
+  updated_at  DateTime? @default(now())
+
+  user       User     @relation(fields: [userId], references: [id])
+  profile    Profile  @relation(fields: [profileId], references: [id])
+  @@id([userId, profileId])
+}
