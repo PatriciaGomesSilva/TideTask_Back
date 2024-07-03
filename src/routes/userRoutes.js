@@ -1,4 +1,3 @@
-// src/routes/userRoutes.js
 const { Router } = require('express');
 const UserController = require('../controllers/UserController');
 const authMiddleware = require('../middlewares/auth');

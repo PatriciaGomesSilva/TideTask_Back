@@ -10,7 +10,11 @@ module.exports = {
 
     async store(req, res) {
         const { description } = req.body;
-        const category = await prisma.category.create({ data: { description } });
+        const category = await prisma.category.create({ 
+            data: { 
+                description 
+            } 
+        });
         return res.json(category);
     },
 

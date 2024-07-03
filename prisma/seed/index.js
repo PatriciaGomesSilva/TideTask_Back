@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 const prisma = new PrismaClient();
 
 async function main() {
-    const password = await bcrypt.hash('admin123', 8);
+    const password = await bcrypt.hash('admin@123', 8);
 
     await prisma.profile.createMany({
         data: [
@@ -17,7 +17,7 @@ async function main() {
         data: {
             firstName: 'Admin',
             lastName: 'User',
-            email: 'admin@example.com',
+            email: 'admin@gmail.com',
             password,
         },
     });

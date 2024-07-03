@@ -1,4 +1,3 @@
-// src/routes/profileRoutes.js
 const { Router } = require('express');
 const ProfileController = require('../controllers/ProfileController');
 const authMiddleware = require('../middlewares/auth');
