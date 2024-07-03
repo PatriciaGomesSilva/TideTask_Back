@@ -8,7 +8,7 @@ module.exports = {
         },
         servers: [
             {
-                url: 'APP_URL',
+                url: process.env.APP_URL,
             },
         ],
     },
