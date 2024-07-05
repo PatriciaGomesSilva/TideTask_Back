@@ -1,16 +1,20 @@
-module.exports = {
-    swaggerDefinition: {
-        openapi: "3.0.0",
+const swaggerJsdoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
+
+const options = {
+    definition: {
+        openapi: '3.0.0',
         info: {
-            title: "TideTask API",
+            title: 'TideTask API',
             version: '1.0.0',
             description: "API para gerir suas tarefas diarias",
         },
-        servers: [
-            {
-                url: process.env.APP_URL,
-            },
-        ],
     },
-    apis: ['./src/routes/*.js'],
+    apis: ['./src/routes/*.js'], // Caminho para os arquivos de rota
+};
+
+const specs = swaggerJsdoc(options);
+
+module.exports = (app) => {
+    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 };

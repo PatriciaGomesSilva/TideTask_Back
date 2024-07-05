@@ -1,0 +1,147 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "title": "TideTask API",
+      "version": "1.0.0",
+      "description": "API for managing personal activities"
+    },
+    "servers": [
+      {
+        "url": "http://localhost:3000"
+      }
+    ],
+
+    
+    "components": {
+      "schemas": {
+        "User": {
+          "type": "object",
+          "required": ["first_name", "last_name", "email", "password"],
+          "properties": {
+            "id": {
+              "type": "integer",
+              "description": "The user ID"
+            },
+            "first_name": {
+              "type": "string",
+              "description": "The user's first name"
+            },
+            "last_name": {
+              "type": "string",
+              "description": "The user's last name"
+            },
+            "email": {
+              "type": "string",
+              "description": "The user's email"
+            },
+            "password": {
+              "type": "string",
+              "description": "The user's password"
+            },
+            "created_at": {
+              "type": "string",
+              "format": "date-time",
+              "description": "The date and time when the user was created"
+            },
+            "updated_at": {
+              "type": "string",
+              "format": "date-time",
+              "description": "The date and time when the user was last updated"
+            }
+          },
+          "example": {
+            "id": 1,
+            "first_name": "John",
+            "last_name": "Doe",
+            "email": "john.doe@example.com",
+            "password": "hashed_password",
+            "created_at": "2023-01-01T00:00:00.000Z",
+            "updated_at": "2023-01-01T00:00:00.000Z"
+          }
+        },
+        "Category": {
+          "type": "object",
+          "required": ["description"],
+          "properties": {
+            "id": {
+              "type": "integer",
+              "description": "The category ID"
+            },
+            "description": {
+              "type": "string",
+              "description": "The category description"
+            },
+            "created_at": {
+              "type": "string",
+              "format": "date-time",
+              "description": "The date and time when the category was created"
+            },
+            "updated_at": {
+              "type": "string",
+              "format": "date-time",
+              "description": "The date and time when the category was last updated"
+            }
+          },
+          "example": {
+            "id": 1,
+            "description": "Work",
+            "created_at": "2023-01-01T00:00:00.000Z",
+            "updated_at": "2023-01-01T00:00:00.000Z"
+          }
+        },
+        "Activity": {
+          "type": "object",
+          "required": ["description", "dt_inicial", "dt_final", "category_id", "user_id"],
+          "properties": {
+            "id": {
+              "type": "integer",
+              "description": "The activity ID"
+            },
+            "description": {
+              "type": "string",
+              "description": "The activity description"
+            },
+            "dt_inicial": {
+              "type": "string",
+              "format": "date-time",
+              "description": "The initial date and time of the activity"
+            },
+            "dt_final": {
+              "type": "string",
+              "format": "date-time",
+              "description": "The final date and time of the activity"
+            },
+            "category_id": {
+              "type": "integer",
+              "description": "The ID of the category this activity belongs to"
+            },
+            "user_id": {
+              "type": "integer",
+              "description": "The ID of the user who created this activity"
+            },
+            "created_at": {
+              "type": "string",
+              "format": "date-time",
+              "description": "The date and time when the activity was created"
+            },
+            "updated_at": {
+              "type": "string",
+              "format": "date-time",
+              "description": "The date and time when the activity was last updated"
+            }
+          },
+          "example": {
+            "id": 1,
+            "description": "Complete project report",
+            "dt_inicial": "2023-01-01T09:00:00.000Z",
+            "dt_final": "2023-01-01T17:00:00.000Z",
+            "category_id": 1,
+            "user_id": 1,
+            "created_at": "2023-01-01T00:00:00.000Z",
+            "updated_at": "2023-01-01T00:00:00.000Z"
+          }
+        }
+      }
+    }
+  }
+  
