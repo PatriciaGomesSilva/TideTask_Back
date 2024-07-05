@@ -20,12 +20,12 @@ model Activity {
   id          Int       @id @default(autoincrement())
   description String
   dt_inicial  DateTime
-  dt_final    DateTime
+  dt_final    DateTime 
+  categoryId  Int 
+  userId      Int
 
   category    Category  @relation(fields: [categoryId], references: [id])
-  categoryId  Int
   user        User      @relation(fields: [userId], references: [id])
-  userId      Int
 }
 
 model User {
@@ -34,27 +34,8 @@ model User {
   lastName    String
   email       String    @unique
   password    String
-
-  profiles    UserProfile[]
-  activities  Activity[]
-}
-
-model Profile {
-  id          Int       @id @default(autoincrement())
-  description String
-  created_at DateTime? @default(now())
-  updated_at DateTime? @default(now())
-
-  userProfiles UserProfile[]
-}
-
-model UserProfile {
-  userId     Int
-  profileId  Int
   created_at  DateTime? @default(now())
   updated_at  DateTime? @default(now())
-
-  user       User     @relation(fields: [userId], references: [id])
-  profile    Profile  @relation(fields: [profileId], references: [id])
-  @@id([userId, profileId])
+ 
+  activities  Activity[]
 }

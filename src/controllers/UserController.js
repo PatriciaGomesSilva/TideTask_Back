@@ -1,40 +1,78 @@
 const { PrismaClient } = require('@prisma/client');
-const bcrypt = require('bcryptjs');
-
 const prisma = new PrismaClient();
 
-module.exports = {
-    async index(req, res) {
-        const users = await prisma.user.findMany();
-        return res.json(users);
-    },
+class UserController {
+    static async getAllUsers(req, res) {
+        try {
+            const users = await prisma.user.findMany();
+            res.json(users);
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    }
 
-    async store(req, res) {
-        const { firstName, lastName, email, password } = req.body;
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const user = await prisma.user.create({ data: { firstName, lastName, email, password: hashedPassword } });
-        return res.json(user);
-    },
+    static async getUserById(req, res) {
+        try {
+            const { id } = req.params;
+            const user = await prisma.user.findUnique({
+                where: { id: Number(id) },
+            });
+            if (!user) {
+                return res.status(404).json({ error: 'User not found' });
+            }
+            res.json(user);
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    }
 
-    async show(req, res) {
-        const { id } = req.params;
-        const user = await prisma.user.findUnique({ where: { id: parseInt(id) } });
-        return res.json(user);
-    },
+    static async createUser(req, res) {
+        try {
+            const { first_name, last_name, email, password } = req.body;
+            const user = await prisma.user.create({
+                data: {
+                    first_name,
+                    last_name,
+                    email,
+                    password,
+                },
+            });
+            res.status(201).json(user);
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    }
 
-    async update(req, res) {
-        const { id } = req.params;
-        const { firstName, lastName, email } = req.body;
-        const user = await prisma.user.update({
-            where: { id: parseInt(id) },
-            data: { firstName, lastName, email },
-        });
-        return res.json(user);
-    },
+    static async updateUser(req, res) {
+        try {
+            const { id } = req.params;
+            const { first_name, last_name, email, password } = req.body;
+            const user = await prisma.user.update({
+                where: { id: Number(id) },
+                data: {
+                    first_name,
+                    last_name,
+                    email,
+                    password,
+                },
+            });
+            res.json(user);
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    }
 
-    async delete(req, res) {
-        const { id } = req.params;
-        await prisma.user.delete({ where: { id: parseInt(id) } });
-        return res.send();
-    },
-};
+    static async deleteUser(req, res) {
+        try {
+            const { id } = req.params;
+            await prisma.user.delete({
+                where: { id: Number(id) },
+            });
+            res.status(204).send();
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    }
+}
+
+module.exports = UserController;

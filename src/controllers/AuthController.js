@@ -1,37 +1,43 @@
 const { PrismaClient } = require('@prisma/client');
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const authConfig = require('../config/auth');
 
 const prisma = new PrismaClient();
 
-module.exports = {
-    async login(req, res) {
-        const { email, password } = req.body;
-
-        const user = await prisma.user.findUnique({ where: { email } });
-
-        if (!user) {
-            return res.status(400).send({ error: 'User not found' });
+class AuthController {
+    static async register(req, res) {
+        try {
+            const { first_name, last_name, email, password } = req.body;
+            const hashedPassword = await bcrypt.hash(password, 10);
+            const user = await prisma.user.create({
+                data: {
+                    first_name,
+                    last_name,
+                    email,
+                    password: hashedPassword,
+                },
+            });
+            res.status(201).json(user);
+        } catch (error) {
+            res.status(500).json({ error: error.message });
         }
+    }
 
-        if (!await bcrypt.compare(password, user.password)) {
-            return res.status(400).send({ error: 'Invalid password' });
+    static async login(req, res) {
+        try {
+            const { email, password } = req.body;
+            const user = await prisma.user.findUnique({ where: { email } });
+
+            if (!user || !(await bcrypt.compare(password, user.password))) {
+                return res.status(401).json({ error: 'Invalid email or password' });
+            }
+
+            const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+            res.json({ token });
+        } catch (error) {
+            res.status(500).json({ error: error.message });
         }
+    }
+}
 
-        user.password = undefined;
-
-        const profiles = await prisma.userProfile.findMany({
-            where: { userId: user.id },
-            include: { profile: true }
-        });
-
-        const roles = profiles.map(profile => profile.profile.description);
-
-        const token = jwt.sign({ id: user.id, roles }, authConfig.secret, {
-            expiresIn: authConfig.expiresIn,
-        });
-
-        return res.json({ user, token });
-    },
-};
+module.exports = AuthController;
